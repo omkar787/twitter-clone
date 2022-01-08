@@ -8,14 +8,15 @@ const { body, validationResult } = require('express-validator')
 const save = (username, email, password) => {
     const promise = new Promise(async (resolve, reject) => {
         try {
-            const salt = bcrypt.genSaltSync(10)
+            const salt = bcrypt.genSaltSync(5)
             const hash = bcrypt.hashSync(password.toString(), salt)
-            const result = await User.create({
+            let result = await User.create({
                 username,
                 email,
                 password: hash
             })
 
+            result.password = null
             console.log(result);
             resolve(result)
         } catch (err) {
@@ -27,11 +28,11 @@ const save = (username, email, password) => {
 }
 
 router.get("/", (req, res) => {
-    res.json({ ok: true })
+    res.sendStatus(404)
 })
 
 router.post("/",
-    body("username").isLength({ min: 3 }),
+    body("username").trim().isLength({ min: 3 }),
     body('email').normalizeEmail().isEmail(),
     body('password').isLength({ min: 5 }),
     (req, res) => {

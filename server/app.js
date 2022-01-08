@@ -2,7 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require("dotenv")
 const register = require("./Routes/register")
-
+const login = require("./Routes/login")
 
 dotenv.config()
 
@@ -21,7 +21,7 @@ const app = express()
 
 app.use(express.json())
 app.use("/register", register)
-
+app.use("/login", login)
 
 
 const PORT = process.env.PORT || 5000
