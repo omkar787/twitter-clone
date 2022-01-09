@@ -5,7 +5,8 @@
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "devstart": "nodemon app.js"
+    "devstart": "nodemon app.js",
+    "start":"node app.js"
   },
   "author": "Omkar Bhoir",
   "license": "ISC",
@@ -18,5 +19,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.1.5",
     "nodemon": "^2.0.15"
+  },
+  "engines":{
+    "node":"14.16.1"
   }
 }
