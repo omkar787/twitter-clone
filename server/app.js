@@ -3,7 +3,9 @@ const mongoose = require('mongoose')
 const dotenv = require("dotenv")
 const register = require("./Routes/register")
 const login = require("./Routes/login")
+const tweet = require("./Routes/Tweet")
 
+const validator = require("./middlewares/validator")
 dotenv.config()
 
 mongoose.connect(process.env.CONNECTION_URI, {
@@ -22,7 +24,7 @@ const app = express()
 app.use(express.json())
 app.use("/register", register)
 app.use("/login", login)
-
+app.use("/tweet", validator, tweet)
 
 const PORT = process.env.PORT || 5000
 

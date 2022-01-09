@@ -19,7 +19,8 @@ const UserSchema = mongoose.Schema({
         minlength: 5
     },
     followers: [mongoose.Schema.Types.ObjectId],
-    following: [mongoose.Schema.Types.ObjectId]
+    following: [mongoose.Schema.Types.ObjectId],
+    posts: [mongoose.Schema.Types.ObjectId]
 })
 
 module.exports = mongoose.model("user", UserSchema)
