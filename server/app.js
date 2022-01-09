@@ -1,10 +1,14 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require("dotenv")
+
+//Routes
 const register = require("./Routes/register")
 const login = require("./Routes/login")
 const tweet = require("./Routes/Tweet")
+const follow = require("./Routes/follow")
 
+//middlewares
 const validator = require("./middlewares/validator")
 dotenv.config()
 
@@ -25,6 +29,8 @@ app.use(express.json())
 app.use("/register", register)
 app.use("/login", login)
 app.use("/tweet", validator, tweet)
+app.use("/follow", validator, follow)
+
 
 const PORT = process.env.PORT || 5000
 
