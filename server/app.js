@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const dotenv = require("dotenv")
+const cors = require("cors")
 
 //Routes
 const register = require("./Routes/register")
@@ -25,6 +26,7 @@ mongoose.connect(process.env.CONNECTION_URI, {
 
 const app = express()
 
+app.use(cors())
 app.use(express.json())
 app.use("/register", register)
 app.use("/login", login)
