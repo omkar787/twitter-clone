@@ -57,7 +57,7 @@ function SignUp({ formSubmitHandle, setUsername, setEmail, setPassword }) {
                         <BsTwitter fill='#fff' size={"2rem"} />
                     </div>
                     <div>
-                        {/* Just a Stud */}
+                        {/* Just a Stub */}
                     </div>
                 </div>
 
