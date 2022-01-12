@@ -1,14 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { BsTwitter } from 'react-icons/bs'
 import { IoMdClose } from 'react-icons/io'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import validate from '../methods/validate'
 
 export default function Register() {
     const [username, setUsername] = useState(null)
     const [email, setEmail] = useState(null)
     const [password, setPassword] = useState(null)
     const [registered, setRegistered] = useState(false)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        validate()
+            .then(response => {
+                if (response) {
+                    navigate("/", { replace: true })
+                }
+            })
+    }, [])
 
     async function formSubmitHandle(e) {
         e.preventDefault()

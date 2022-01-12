@@ -8,6 +8,7 @@ const register = require("./Routes/register")
 const login = require("./Routes/login")
 const tweet = require("./Routes/Tweet")
 const follow = require("./Routes/follow")
+const validate = require("./Routes/validate")
 
 //middlewares
 const validator = require("./middlewares/validator")
@@ -32,7 +33,7 @@ app.use("/register", register)
 app.use("/login", login)
 app.use("/tweet", validator, tweet)
 app.use("/follow", validator, follow)
-
+app.use("/validate", validator, validate)
 
 const PORT = process.env.PORT || 5000
 

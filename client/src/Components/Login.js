@@ -1,7 +1,7 @@
-import React, { useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import { BsTwitter } from 'react-icons/bs'
 import { IoMdClose } from 'react-icons/io'
-import { Link, Navigate } from 'react-router-dom'
+import { Link, Navigate, useNavigate } from 'react-router-dom'
 import validate from '../methods/validate'
 import axios from 'axios'
 
@@ -9,6 +9,16 @@ export default function Login() {
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
     const [isLogin, setIsLogin] = useState(false)
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        validate()
+            .then(response => {
+                if (response) {
+                    navigate("/", { replace: true })
+                }
+            })
+    }, [])
 
     async function formSubmitHandle(e) {
         e.preventDefault()
@@ -28,9 +38,8 @@ export default function Login() {
         console.log(data);
         if (data.ok) {
             localStorage.setItem("token", data.data)
-            validate()
         }
-        // setIsLogin(data.ok)
+        setIsLogin(data.ok)
     }
 
     return (

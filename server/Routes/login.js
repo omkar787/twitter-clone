@@ -16,7 +16,7 @@ const login = (username, password) => {
         try {
             const user = await User.findOne({ username: username })
             if (user) {
-                const validate = bcrypt.compareSync(password, user.password)
+                const validate = bcrypt.compareSync(password.toString(), user.password)
                 // console.log(validate);
                 if (validate) {
                     const token = jwt.sign({
