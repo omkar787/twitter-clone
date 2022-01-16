@@ -96,33 +96,26 @@ function getAllTweets(user) {
         const tweets = []
         let count = 0
         user.following
-            .forEach((id, index, array) => {
+            .forEach((id) => {
                 User.findById(id)
                     .then(us => {
                         if (us.posts.length > 0) {
                             count += us.posts.length
-                            // console.log(count);
                             us
                                 .posts
-                                .forEach((post, index2, array2) => {
+                                .forEach((post) => {
                                     tweet
                                         .findById(post, "-_id -createdBy")
                                         .then(individualTweet => {
-                                            tweets.push(individualTweet)
-                                            // console.log(tweets.length);
-                                            // if (index === (array.length - 1) && index2 === (array2.length - 1)) {
+                                            tweets.push({ individualTweet, createdBy: us.username })
                                             if (tweets.length === count) {
-                                                // resolve(tweets)
                                                 resolve(sortTweet(tweets))
-                                                // console.log(tweets);
                                             }
                                         })
                                         .catch(err => {
                                             console.log(err);
                                             resolve([])
                                         })
-
-
                                 })
 
                         }
@@ -130,19 +123,8 @@ function getAllTweets(user) {
                         console.log(err);
                         resolve([])
                     })
-
-
-                // console.log(count);
-                // if (count > 2) {
-                //     console.log(typeof tweets, index, array.length);
-                //     // resolve(tweets)
-                //     // sortTweet(tweets)
-                //     console.log(tweets);
-                // }
             })
-
     })
-
     return promise
 }
 
@@ -152,7 +134,6 @@ router.get("/get-all", async (req, res) => {
 
         getAllTweets(user)
             .then(data => {
-                // console.log(data);
                 res.json({ ok: true, data })
             })
 
