@@ -11,29 +11,86 @@ dotenv.config({
     path: path.join(__dirname, "../", ".env")
 })
 
+const getFollowersUsername = (followers) => {
+    let follows = []
+    let count = 0
+    return new Promise((resolve, reject) => {
+        try {
+            if (followers.length > 0) {
+                followers.forEach(async element => {
+                    const { username } = await User.findById(element)
+                    follows.push(username)
+                    count++
+                    if (count === followers.length) {
+                        resolve(follows)
+                    }
+                });
+            } else {
+                resolve([])
+            }
+        } catch (err) {
+            console.log(err);
+            resolve([])
+        }
+    })
+
+}
+
+const getFollowingsUsername = (followings) => {
+    let following = []
+    let count = 0
+    return new Promise((resolve, reject) => {
+        try {
+            if (followings.length > 0) {
+                followings.forEach(async element => {
+                    const { username } = await User.findById(element)
+                    following.push(username)
+                    count++
+                    if (count === followings.length) {
+                        resolve(following)
+                    }
+                });
+            } else {
+                resolve([])
+            }
+        } catch (err) {
+            console.log(err);
+            resolve([])
+        }
+    })
+
+}
+
 const login = (username, password) => {
     const promise = new Promise(async (resolve, reject) => {
         try {
             const user = await User.findOne({ username: username })
             if (user) {
                 const validate = bcrypt.compareSync(password.toString(), user.password)
-                // console.log(validate);
+
                 if (validate) {
+                    const followers = await getFollowersUsername(user.followers)
+                    const followings = await getFollowingsUsername(user.following)
+
+                    console.log(followers);
+                    console.log(followings);
+
                     const token = jwt.sign({
                         username: user.username,
                         emai: user.email,
-                        followers: user.followers,
-                        following: user.following
+                        followers: followers,
+                        following: followings
                     },
                         process.env.JWT_KEY)
                     resolve(token)
+
+
                 } else {
                     reject({ msg: "Password wrong" })
                 }
             } else {
                 reject({ msg: "User not found" })
             }
-            // resolve(res)
         } catch (err) {
             console.log(err);
             reject({ error: err })
