@@ -4,15 +4,19 @@ const tweet = require("../models/Tweet")
 const User = require("../models/User")
 
 
-const addPost = (txt, objId) => {
+const addPost = (txt, objId, username) => {
     const promise = new Promise(async (resolve, reject) => {
         try {
-            const post = await tweet.create({
+            let post = await tweet.create({
                 msg: txt,
                 createdBy: objId
             })
+
+            post.createdBy = username
+            const { msg, likes, createdAt, _id } = post
+            console.log(post);
             if (post) {
-                resolve({ ok: true, data: post })
+                resolve({ ok: true, data: { msg, likes, createdAt, createdBy: username, _id } })
             } else {
                 reject({ ok: false, msg: "An error occured" })
             }
@@ -57,13 +61,14 @@ router.post("/add",
             }
             const txt = req.body["msg"]
             const objId = req.user._id.toString()
-            const post = await addPost(txt, objId)
+            const post = await addPost(txt, objId, req.user.username)
 
-            console.log(post);
+            // console.log(post);
 
             if (post.ok) {
                 const done = await addPostToUser(objId, post.data._id)
-                const obj = { msg: post.data.msg, likes: post.data.likes }
+                // console.log(post);
+                const obj = { msg: post.data.msg, likes: post.data.likes, createdAt: post.data.createdAt, createdBy: post.data.createdBy }
                 res.json({ ...done, data: obj })
             } else {
                 res.json(post)
@@ -107,10 +112,16 @@ function getAllTweets(user) {
                                     tweet
                                         .findById(post, "-_id -createdBy")
                                         .then(individualTweet => {
-                                            tweets.push({ individualTweet, createdBy: us.username })
+                                            if (individualTweet) {
+                                                const { msg, likes, createdAt } = individualTweet
+                                                tweets.push({ msg, likes, createdAt, createdBy: us.username })
+                                            } else {
+                                                count--
+                                            }
                                             if (tweets.length === count) {
                                                 resolve(sortTweet(tweets))
                                             }
+
                                         })
                                         .catch(err => {
                                             console.log(err);

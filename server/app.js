@@ -5,10 +5,11 @@ const cors = require("cors")
 
 //Routes
 const register = require("./Routes/register")
-const login = require("./Routes/login")
+const { login } = require("./Routes/login")
 const tweet = require("./Routes/Tweet")
 const follow = require("./Routes/follow")
 const validate = require("./Routes/validate")
+const getUser = require("./Routes/getUser")
 
 //middlewares
 const validator = require("./middlewares/validator")
@@ -34,6 +35,7 @@ app.use("/login", login)
 app.use("/tweet", validator, tweet)
 app.use("/follow", validator, follow)
 app.use("/validate", validator, validate)
+app.use("/get-user", validator, getUser)
 
 const PORT = process.env.PORT || 5000
 

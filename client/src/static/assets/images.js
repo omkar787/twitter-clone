@@ -7,6 +7,7 @@ export { default as TwitterList } from "./twitter_list.png"
 export { default as TwitterProfile } from "./twitter_profile.png"
 export { default as TwitterMore } from "./twitter_more.png"
 export { default as TwitterTweets } from "./twitter_tweets.png"
+export { default as TwitterArrow } from "./twitter_arrow.png"
 export { default as Profile } from "./profile.png"
 
 

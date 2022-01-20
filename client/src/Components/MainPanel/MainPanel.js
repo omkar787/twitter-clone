@@ -3,10 +3,10 @@ import MainPanelPostTweet from "./MainPanelPostTweet";
 import MainPanelLatestTweet from "./MainPanelLatestTweet";
 import axios from "axios";
 
-const MainPanel = () => {
+const MainPanel = ({ change }) => {
     const [disabled, setDisabled] = useState(true);
     const [tweet, setTweet] = useState("");
-    const [latestTweets, setLatestTweets] = useState(null);
+    const [latestTweets, setLatestTweets] = useState([]);
 
     useEffect(() => {
         async function fetchData() {
@@ -19,7 +19,7 @@ const MainPanel = () => {
             setLatestTweets(data.data)
         }
         fetchData()
-    }, [])
+    }, [change])
 
     const handleOnChange = (e) => {
         const txt = e.target.value;
@@ -57,7 +57,7 @@ const MainPanel = () => {
         }
     };
     return (
-        <div className="h-screen w-[573px] overflow-y-auto no-scrollbar border-r border-gray-600 pt-5">
+        <div className="h-screen w-[45%] overflow-y-auto no-scrollbar border-r border-gray-600 pt-5">
             <div className="">
                 {/* upper main panel for tweeeting */}
                 <MainPanelPostTweet
@@ -68,7 +68,7 @@ const MainPanel = () => {
                 />
 
                 {/* lower panel for showing latest tweets */}
-                {latestTweets && <MainPanelLatestTweet latestTweets={latestTweets} />}
+                {latestTweets.length > 0 && <MainPanelLatestTweet latestTweets={latestTweets} />}
                 <div></div>
             </div>
         </div>

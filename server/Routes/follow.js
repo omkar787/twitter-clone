@@ -2,6 +2,8 @@ const router = require("express").Router()
 const { body, validationResult } = require("express-validator")
 const mongoose = require("mongoose")
 const User = require("../models/User")
+const jwt = require("jsonwebtoken")
+const { getUsers } = require("../Routes/login")
 
 const addUsers = (user1, user2) => {
     const promise = new Promise(async (resolve, reject) => {
@@ -9,19 +11,35 @@ const addUsers = (user1, user2) => {
             const userOne = await User.findOne({ username: user1 })
             const userTwo = await User.findOne({ username: user2 })
 
-            if (!userOne.following.includes(userTwo._id)) {
-                userOne.following.push(userTwo._id)
-            }
-            if (!userTwo.followers.includes(userOne._id)) {
-                userTwo.followers.push(userOne._id)
+            if (userOne && userTwo) {
+                if (!userOne.following.includes(userTwo._id)) {
+                    userOne.following.push(userTwo._id)
+                }
+                if (!userTwo.followers.includes(userOne._id)) {
+                    userTwo.followers.push(userOne._id)
+                }
+
+                await userOne.save()
+                await userTwo.save()
+
+                const followers = await getUsers(userOne.followers)
+                const followings = await getUsers(userOne.following)
+
+                const token = jwt.sign({
+                    username: userOne.username,
+                    emai: userOne.email,
+                    followers: followers,
+                    following: followings
+                },
+                    process.env.JWT_KEY)
+
+                resolve({ ok: true, msg: "Followed Successfully", token })
+            } else {
+                resolve({ ok: false, msg: "No user found" })
             }
 
-            await userOne.save()
-            await userTwo.save()
-
-            console.log(userOne, userTwo);
-            resolve({ ok: true, msg: "Followed Successfully" })
         } catch (err) {
+            console.log(err);
             reject({ ok: false, msg: "An error occured", error: err })
         }
     })

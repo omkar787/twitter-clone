@@ -11,7 +11,7 @@ dotenv.config({
     path: path.join(__dirname, "../", ".env")
 })
 
-const getFollowersUsername = (followers) => {
+const getUsers = (followers) => {
     let follows = []
     let count = 0
     return new Promise((resolve, reject) => {
@@ -36,31 +36,6 @@ const getFollowersUsername = (followers) => {
 
 }
 
-const getFollowingsUsername = (followings) => {
-    let following = []
-    let count = 0
-    return new Promise((resolve, reject) => {
-        try {
-            if (followings.length > 0) {
-                followings.forEach(async element => {
-                    const { username } = await User.findById(element)
-                    following.push(username)
-                    count++
-                    if (count === followings.length) {
-                        resolve(following)
-                    }
-                });
-            } else {
-                resolve([])
-            }
-        } catch (err) {
-            console.log(err);
-            resolve([])
-        }
-    })
-
-}
-
 const login = (username, password) => {
     const promise = new Promise(async (resolve, reject) => {
         try {
@@ -69,11 +44,8 @@ const login = (username, password) => {
                 const validate = bcrypt.compareSync(password.toString(), user.password)
 
                 if (validate) {
-                    const followers = await getFollowersUsername(user.followers)
-                    const followings = await getFollowingsUsername(user.following)
-
-                    console.log(followers);
-                    console.log(followings);
+                    const followers = await getUsers(user.followers)
+                    const followings = await getUsers(user.following)
 
                     const token = jwt.sign({
                         username: user.username,
@@ -123,4 +95,4 @@ router.post("/",
 
 
     })
-module.exports = router
+module.exports = { login: router, getUsers }
